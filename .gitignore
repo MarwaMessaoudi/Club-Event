@@ -15,6 +15,9 @@ coverage/
 # TypeScript build cache
 *.tsbuildinfo
 
+
+uploads/
+
 # Logs
 logs
 *.log

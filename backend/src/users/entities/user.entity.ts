@@ -1,7 +1,9 @@
 import {
   Column, CreateDateColumn, Entity,
+  OneToMany,
   PrimaryGeneratedColumn, UpdateDateColumn,
 } from 'typeorm';
+import { UserStatus } from './user-status.enum';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -30,9 +32,15 @@ export class User {
   @Column({ type: 'enum', enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
 
+   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
+  status: UserStatus;
+  
   // Hash of the current refresh token. NULL = user is logged out.
   @Column({ type: 'varchar', nullable: true, select: false })
   hashedRefreshToken: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  avatar: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -40,3 +48,5 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+
+export { UserStatus };
