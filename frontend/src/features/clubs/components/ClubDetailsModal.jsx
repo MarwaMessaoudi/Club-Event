@@ -69,7 +69,7 @@ export default function ClubDetailsModal({
   }
 
   const imageUrl = getFileUrl(club.image);
-
+  const isAdmin = user?.role === 'admin';
   const membershipStatus = club.membershipStatus;
   const isManager = club.myRole === 'manager';
 
@@ -294,20 +294,20 @@ export default function ClubDetailsModal({
                 <X className="w-4 h-4" />
                 {leaveClub.isPending ? 'Cancelling...' : 'Cancel Request'}
               </button>
-            ) : (
-              <button
-                onClick={handleRequestJoin}
-                disabled={isBusy}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-semibold"
-              >
-                <UserPlus className="w-4 h-4" />
-                {requestToJoin.isPending
-                  ? 'Sending...'
-                  : membershipStatus === 'rejected'
-                    ? 'Request Again'
-                    : 'Request to Join'}
-              </button>
-            )}
+            ) : !isAdmin ? (
+  <button
+    onClick={handleRequestJoin}
+    disabled={isBusy}
+    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-semibold"
+  >
+    <UserPlus className="w-4 h-4" />
+    {requestToJoin.isPending
+      ? 'Sending...'
+      : membershipStatus === 'rejected'
+        ? 'Request Again'
+        : 'Request to Join'}
+  </button>
+) : null}
           </div>
         </div>
       </div>

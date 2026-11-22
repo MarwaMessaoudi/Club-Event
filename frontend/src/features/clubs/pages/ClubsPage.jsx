@@ -17,6 +17,10 @@ import {
   useClubs,
   useRequestToJoinClub,
 } from '../hooks/useClubs';
+
+
+import { useAuth } from '../../auth/context/AuthContext';
+
 const LIMIT = 9;
 const CATEGORIES = ['Tech', 'Arts', 'Sports', 'Academic', 'Culture'];
 
@@ -30,6 +34,8 @@ export default function ClubsPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [selected, setSelected] = useState(null);
   const [feedback, setFeedback] = useState(null); // { type: 'success' | 'error', text }
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
 
   // URL is the source of truth for list state → survives F5 and Back button
   const setParams = (updates) => {
@@ -113,13 +119,15 @@ const requestToJoin = useRequestToJoinClub();
           </p>
         </div>
 
-        <button
-          onClick={() => setShowCreate(true)}
-          className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold shadow-lg shadow-indigo-600/20 transition"
-        >
-          <PlusCircle className="w-4 h-4" />
-          Propose Club
-        </button>
+        {!isAdmin && (
+  <button
+    onClick={() => setShowCreate(true)}
+    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold shadow-lg shadow-indigo-600/20 transition"
+  >
+    <PlusCircle className="w-4 h-4" />
+    Propose Club
+  </button>
+)}
       </div>
 
       {/* Feedback banner */}
@@ -189,7 +197,9 @@ const requestToJoin = useRequestToJoinClub();
           <p className="text-sm text-slate-500 mt-2">
             {search || category
               ? 'Try a different search or category.'
-              : 'No approved clubs yet — propose the first one!'}
+              : isAdmin
+                ? 'No approved clubs yet.'
+                : 'No approved clubs yet — propose the first one!'}
           </p>
         </div>
       ) : (
@@ -199,15 +209,13 @@ const requestToJoin = useRequestToJoinClub();
           }`}
         >
           {clubs.map((club) => (
-           <ClubCard
+          <ClubCard
   key={club.id}
   club={club}
   onView={setSelected}
   onRequestJoin={handleRequestToJoin}
-  requesting={
-    requestToJoin.isPending &&
-    requestToJoin.variables === club.id
-  }
+  canRequestJoin={!isAdmin}
+  requesting={requestToJoin.isPending && requestToJoin.variables === club.id}
 />
           ))}
         </div>

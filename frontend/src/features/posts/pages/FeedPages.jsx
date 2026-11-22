@@ -9,6 +9,7 @@ import {
   X,
 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../../auth/context/AuthContext';
 
 import { usePosts, postKeys } from '../hooks/usePosts';
 import { useRealtimeEvent } from '../../realtime/useRealtimeEvent';
@@ -18,7 +19,8 @@ import Pagination from '../../../components/ui/Pagination';
 
 export default function FeedPage() {
   const queryClient = useQueryClient();
-
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Math.max(1, Number(searchParams.get('page')) || 1);
   const search = searchParams.get('search') || '';
@@ -173,6 +175,7 @@ export default function FeedPage() {
         }
       />
 
+{!isAdmin && (
       <CreatePostModal
         open={showCreate}
         onClose={() => setShowCreate(false)}
@@ -186,7 +189,7 @@ export default function FeedPage() {
               : 'Post submitted! It will appear on the feed once approved by a supervisor.',
           });
         }}
-      />
+      />)}
     </div>
   );
 }

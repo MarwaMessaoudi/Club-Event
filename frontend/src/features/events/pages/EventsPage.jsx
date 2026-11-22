@@ -35,7 +35,8 @@ export default function EventsPage() {
   const canManageAll =
     user?.role === 'admin' ||
     user?.role === 'supervisor';
-
+    const isAdmin = user?.role === 'admin';
+    
   const [searchParams, setSearchParams] = useSearchParams();
 
   const page = Math.max(1, Number(searchParams.get('page')) || 1);
@@ -197,13 +198,14 @@ export default function EventsPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowCreate(true)}
-          className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold shadow-lg shadow-indigo-600/20"
-        >
-          <PlusCircle className="w-4 h-4" />
-          Propose Event
-        </button>
+       {!isAdmin && (
+          <button
+            onClick={() => setShowCreate(true)}
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold shadow-lg shadow-indigo-600/20"
+          >
+            <PlusCircle className="w-4 h-4" />
+            Propose Event
+          </button>)}
       </div>
 
       {/* Feedback */}
@@ -274,8 +276,7 @@ export default function EventsPage() {
           </h3>
 
           <p className="text-sm text-slate-500 mt-2">
-            Propose an event or try another search.
-          </p>
+{isAdmin ? 'Try another search.' : 'Propose an event or try another search.'}          </p>
         </div>
       ) : (
         <div
@@ -311,16 +312,17 @@ export default function EventsPage() {
       />
 
       {/* Modals */}
-      <CreateEventModal
-        open={showCreate}
-        onClose={() => setShowCreate(false)}
-        onCreated={() => {
-          setFeedback({
-            type: 'success',
+      {!isAdmin && (
+        <CreateEventModal
+          open={showCreate}
+          onClose={() => setShowCreate(false)}
+          onCreated={() => {
+            setFeedback({
+              type: 'success',
             text: 'Event submitted successfully.',
           });
         }}
-      />
+      />)}
 
       <EditEventModal
         event={editingEvent}

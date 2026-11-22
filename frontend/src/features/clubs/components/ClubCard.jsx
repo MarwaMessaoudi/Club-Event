@@ -6,6 +6,8 @@ export default function ClubCard({
   onView,
   onRequestJoin,
   requesting,
+  canRequestJoin = true,
+
 }) {
   const imageUrl = getFileUrl(club.image);
 
@@ -96,17 +98,16 @@ export default function ClubCard({
             <Clock3 className="w-3.5 h-3.5" />
             Pending
           </span>
-        ) : (
-          <button
-            onClick={() => onRequestJoin(club)}
-            disabled={requesting}
-            className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-semibold flex items-center gap-1.5 transition"
-          >
-            <UserPlus className="w-3.5 h-3.5" />
-
-            {requesting ? 'Sending...' : requestLabel}
-          </button>
-        )}
+        ) : canRequestJoin ? (
+  <button
+    onClick={() => onRequestJoin(club)}
+    disabled={requesting}
+    className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-semibold flex items-center gap-1.5 transition"
+  >
+    <UserPlus className="w-3.5 h-3.5" />
+    {requesting ? 'Sending...' : requestLabel}
+  </button>
+) : null}
       </div>
     </article>
   );
