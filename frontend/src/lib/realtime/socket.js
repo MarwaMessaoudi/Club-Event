@@ -1,8 +1,7 @@
 import { io } from 'socket.io-client';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-const BACKEND_ORIGIN = new URL(API_URL).origin;
-
+const BACKEND_ORIGIN = new URL(API_URL, window.location.origin).origin;
 let socket = null;
 
 export function connectSocket(accessToken) {

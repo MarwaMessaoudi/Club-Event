@@ -64,8 +64,7 @@ export class AuthController {
   private setRefreshCookie(res: Response, token: string) {
     res.cookie(REFRESH_COOKIE, token, {
       httpOnly: true,                              // JS cannot read it (XSS protection)
-      secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
-      sameSite: 'strict',                          // CSRF protection
+      secure: process.env.COOKIE_SECURE === 'true',      sameSite: 'strict',                          // CSRF protection
       path: REFRESH_COOKIE_PATH,
       maxAge: 7 * 24 * 60 * 60 * 1000,             // 7 days
     });
