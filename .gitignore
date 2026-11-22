@@ -16,8 +16,7 @@ coverage/
 *.tsbuildinfo
 
 
-uploads/
-
+/backend/uploads/
 # Logs
 logs
 *.log
