@@ -42,9 +42,10 @@ export function useSendMessage(conversationId) {
   return useMutation({
     mutationFn: (content) => chatApi.sendMessage(conversationId, content),
     onSuccess: (newMessage) => {
-      // Optimistically append message to current conversation feed
       queryClient.setQueryData(chatKeys.messages(conversationId), (old) => {
         if (!old?.data) return old;
+        // the realtime event may already have added this message
+        if (old.data.some((m) => m.id === newMessage.id)) return old;
         return {
           ...old,
           data: [...old.data, newMessage],
